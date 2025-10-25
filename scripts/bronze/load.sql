@@ -1,0 +1,111 @@
+-- Creating Database
+CREATE DATABASE datawarehouse;
+
+-- Activating Database
+USE datawarehouse;
+
+-- Creating Schemas
+CREATE SCHEMA bronze;
+CREATE SCHEMA silver;
+CREATE SCHEMA gold;
+
+-- Creating Table Schemas
+CREATE TABLE bronze.crm_cust_info(
+	cst_id INT,
+    cst_key VARCHAR(50),
+    cst_firstname VARCHAR(50),
+    cst_lastname VARCHAR(50),
+    cst_marital_status VARCHAR(50),
+    cst_gndr VARCHAR(50),
+    cst_create_date DATE
+);
+
+CREATE TABLE bronze.crm_prod_info(
+	prd_id INT,
+    prd_key VARCHAR(50),
+    prd_nm VARCHAR(50),
+    prd_cost INT,
+    prd_line VARCHAR(50),
+    prd_start_dt DATETIME,
+    prd_end_dt DATETIME
+);
+  
+CREATE TABLE bronze.crm_sales_details(
+	sls_ord_num VARCHAR(50),
+    sls_prd_key VARCHAR(50),
+    sls_cust_id INT,
+    sls_order_dt INT,
+    sls_ship_dt INT,
+    sls_due_dt INT,
+    sls_sales INT,
+    sls_quantity INT,
+    sls_price INT
+);
+  
+CREATE TABLE bronze.erp_loc_a101(
+	cid VARCHAR(50),
+    cntry VARCHAR(50)
+);
+
+CREATE TABLE bronze.erp_cust_az12(
+	cid VARCHAR(50),
+    bdate DATE,
+    gen VARCHAR(50)
+);
+
+CREATE TABLE bronze.erp_px_cat_g1v2(
+	id VARCHAR(50),
+    cat VARCHAR(50),
+    subcat VARCHAR(50),
+    maintenance VARCHAR(50)
+);
+
+-- Allowing NULL Values in cust_id column
+ALTER TABLE bronze.crm_cust_info
+MODIFY cst_id INT NULL;
+
+-- Temporarily changing sql mode
+DESCRIBE bronze.crm_cust_info;
+SELECT @@sql_mode;
+SET SESSION sql_mode = '';
+
+-- Loading Data in Tables
+LOAD DATA INFILE "C:\\PROJECT 1\\source_crm\\cust_info.csv"
+INTO TABLE bronze.crm_cust_info
+FIELDS TERMINATED BY ','
+LINES TERMINATED BY '\n'
+IGNORE 1 ROWS
+(cst_id, cst_key, cst_firstname, cst_lastname, cst_marital_status, cst_gndr, cst_create_date)
+SET cst_id = NULLIF(cst_id, '');
+
+
+LOAD DATA INFILE "C:\\PROJECT 1\\source_crm\\prd_info.csv"
+INTO TABLE bronze.crm_prod_info
+FIELDS TERMINATED BY ','
+LINES TERMINATED BY '\n'
+IGNORE 1 ROWS;
+
+LOAD DATA INFILE "C:\\PROJECT 1\\source_crm\\sales_details.csv"
+INTO TABLE bronze.crm_sales_details
+FIELDS TERMINATED BY ','
+LINES TERMINATED BY '\n'
+IGNORE 1 ROWS;
+
+LOAD DATA INFILE "C:\\PROJECT 1\\source_erp\\CUST_AZ12.csv"
+INTO TABLE bronze.erp_cust_az12
+FIELDS TERMINATED BY ','
+LINES TERMINATED BY '\n'
+IGNORE 1 ROWS;
+
+LOAD DATA INFILE "C:\\PROJECT 1\\source_erp\\LOC_A101.csv"
+INTO TABLE bronze.erp_loc_a101
+FIELDS TERMINATED BY ','
+LINES TERMINATED BY '\n'
+IGNORE 1 ROWS;
+
+LOAD DATA INFILE "C:\\PROJECT 1\\source_erp\\PX_CAT_G1V2.csv"
+INTO TABLE bronze.erp_px_cat_g1v2
+FIELDS TERMINATED BY ','
+LINES TERMINATED BY '\n'
+IGNORE 1 ROWS;
+
