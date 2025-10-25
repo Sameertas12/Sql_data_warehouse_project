@@ -1,4 +1,7 @@
 -- Data Cleaning and Loading Cleaned Data into Silver Layer
+
+-- crm_cust_info (Customer Info) Table
+
 SELECT * FROM bronze.crm_cust_info;
 
 -- Displaying duplicates and Null values in cst_id column
