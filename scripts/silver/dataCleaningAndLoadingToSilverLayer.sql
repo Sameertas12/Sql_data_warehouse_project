@@ -512,3 +512,37 @@ FROM bronze.erp_loc_a101;
 
 -- -----------------------------------------------------------------------------------
 
+-- erp_px_cat_g1v2
+SELECT * FROM erp_px_cat_g1v2;
+
+-- Checking for Extra Spaces in cat and subcat column
+SELECT * FROM erp_px_cat_g1v2
+WHERE cat != TRIM(cat) OR subcat != TRIM(subcat);
+
+-- Checking Distinct Values in maintenance column
+SELECT maintenance, COUNT(*)
+FROM erp_px_cat_g1v2
+GROUP BY maintenance;
+
+-- Fixing the Issue
+SELECT maintenance, COUNT(*)
+FROM(
+SELECT
+	CASE
+		WHEN maintenance LIKE '%No%' THEN 'No'
+        ELSE 'Yes'
+    END AS maintenance
+FROM erp_px_cat_g1v2
+) AS Subquery1
+GROUP BY maintenance;
+
+INSERT INTO silver.erp_px_cat_g1v2()
+SELECT
+	id,
+    cat,
+    subcat,
+    CASE
+		WHEN maintenance LIKE '%No%' THEN 'No'
+        ELSE 'Yes'
+    END AS maintenance
+FROM bronze.erp_px_cat_g1v2;
