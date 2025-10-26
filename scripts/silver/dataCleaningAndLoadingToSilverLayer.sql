@@ -429,8 +429,8 @@ GROUP BY gen;
 -- SET SQL_SAFE_UPDATES = 0;
 -- UPDATE bronze.erp_cust_az12
 -- SET gen = CASE
---   WHEN REGEXP_REPLACE(UPPER(gen), '[^A-Z]', '') IN ('MALE','M') THEN 'MALE'
---   WHEN REGEXP_REPLACE(UPPER(gen), '[^A-Z]', '') IN ('FEMALE','F') THEN 'FEMALE'
+--   WHEN REGEXP_REPLACE(UPPER(gen), '[^A-Z]', '') IN ('MALE','M') THEN 'Male'
+--   WHEN REGEXP_REPLACE(UPPER(gen), '[^A-Z]', '') IN ('FEMALE','F') THEN 'Female'
 --   ELSE 'N/A'
 -- END;
 -- SET SQL_SAFE_UPDATES = 1;
